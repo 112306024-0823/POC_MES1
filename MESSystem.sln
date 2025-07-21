@@ -1,0 +1,31 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MESSystem.API", "backend\MESSystem.API\MESSystem.API.csproj", "{2C9F47F1-7C28-4B10-8D69-A9B6B5C8E4F3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frontend", "Frontend", "{8B8C7A91-5F43-4D87-9E2A-F4C6D3E2B1A7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{9A7D5B82-6F54-4E98-8F3C-D5A4C2E9F1B6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2C9F47F1-7C28-4B10-8D69-A9B6B5C8E4F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C9F47F1-7C28-4B10-8D69-A9B6B5C8E4F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C9F47F1-7C28-4B10-8D69-A9B6B5C8E4F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C9F47F1-7C28-4B10-8D69-A9B6B5C8E4F3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2C9F47F1-7C28-4B10-8D69-A9B6B5C8E4F3} = {9A7D5B82-6F54-4E98-8F3C-D5A4C2E9F1B6}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A1B2C3D4-E5F6-7890-ABCD-EF1234567890}
+	EndGlobalSection
+EndGlobal 
