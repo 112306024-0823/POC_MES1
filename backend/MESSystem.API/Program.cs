@@ -77,7 +77,8 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
     {
-        policy.WithOrigins("http://localhost:3000")
+        // 部署到 Render 時，請將下方網址改為你的前端靜態站台網址
+        policy.WithOrigins("https://your-frontend.onrender.com")
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();

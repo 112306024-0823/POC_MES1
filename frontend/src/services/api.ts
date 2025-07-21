@@ -10,7 +10,8 @@ import {
 
 // 建立 axios 實例
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api',
+  // 部署到 Render 時，請在 Render 靜態站台設定 REACT_APP_API_URL，指向你的後端 API 服務網址
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000/api',
   timeout: 10000,
 });
 
