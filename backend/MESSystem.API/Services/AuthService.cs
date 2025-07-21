@@ -65,7 +65,8 @@ public class AuthService : IAuthService
                 Token = token,
                 Username = user.Username,
                 Factory = user.Factory,
-                ExpiresAt = expiresAt
+                ExpiresAt = expiresAt,
+                IsAdmin = user.IsAdmin
             };
         }
         catch (Exception ex)
@@ -73,6 +74,115 @@ public class AuthService : IAuthService
             _logger.LogError(ex, "登入時發生錯誤: {Username}", loginRequest.Username);
             return null;
         }
+    }
+
+    /// <summary>
+    /// 使用者註冊
+    /// </summary>
+    /// <param name="registerRequest">註冊請求</param>
+    /// <returns>註冊回應</returns>
+    public async Task<RegisterResponseDto> RegisterAsync(RegisterRequestDto registerRequest)
+    {
+        // 檢查帳號是否已存在（同一廠別下）
+        var exists = await _context.Users.AnyAsync(u => u.Username == registerRequest.Username && u.Factory == registerRequest.Factory);
+        if (exists)
+        {
+            throw new InvalidOperationException("該帳號於此廠別已存在");
+        }
+
+        // 密碼處理：如未填則自動產生
+        string password = string.IsNullOrWhiteSpace(registerRequest.Password)
+            ? GenerateRandomPassword(8)
+            : registerRequest.Password!;
+        string passwordHash = BCrypt.Net.BCrypt.HashPassword(password);
+
+        var user = new Models.User
+        {
+            Username = registerRequest.Username,
+            PasswordHash = passwordHash,
+            Factory = registerRequest.Factory,
+            IsAdmin = false
+        };
+        _context.Users.Add(user);
+        await _context.SaveChangesAsync();
+
+        return new RegisterResponseDto
+        {
+            Username = user.Username,
+            Factory = user.Factory,
+            GeneratedPassword = string.IsNullOrWhiteSpace(registerRequest.Password) ? password : null,
+            IsAdmin = false
+        };
+    }
+
+    /// <summary>
+    /// 批次匯入帳號
+    /// </summary>
+    /// <param name="users">匯入帳號清單</param>
+    /// <returns>匯入結果</returns>
+    public async Task<ImportUsersResponseDto> ImportUsersAsync(List<ImportUserDto> users)
+    {
+        var results = new List<ImportUserResultDto>();
+        foreach (var u in users)
+        {
+            var result = new ImportUserResultDto
+            {
+                Username = u.Username,
+                Factory = u.Factory
+            };
+            try
+            {
+                // 檢查帳號唯一性
+                var exists = await _context.Users.AnyAsync(x => x.Username == u.Username && x.Factory == u.Factory);
+                if (exists)
+                {
+                    result.Success = false;
+                    result.Error = "該帳號於此廠別已存在";
+                    results.Add(result);
+                    continue;
+                }
+                // 密碼處理
+                string password = string.IsNullOrWhiteSpace(u.Password) ? GenerateRandomPassword(8) : u.Password!;
+                string passwordHash = BCrypt.Net.BCrypt.HashPassword(password);
+                var user = new Models.User
+                {
+                    Username = u.Username,
+                    PasswordHash = passwordHash,
+                    Factory = u.Factory,
+                    IsAdmin = false
+                };
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+                result.Success = true;
+                result.GeneratedPassword = string.IsNullOrWhiteSpace(u.Password) ? password : null;
+            }
+            catch (Exception ex)
+            {
+                result.Success = false;
+                result.Error = ex.Message;
+            }
+            results.Add(result);
+        }
+        return new ImportUsersResponseDto { Results = results };
+    }
+
+    /// <summary>
+    /// 依帳號查詢使用者（管理者權限驗證用）
+    /// </summary>
+    public async Task<Models.User?> GetUserByUsernameAsync(string? username)
+    {
+        if (string.IsNullOrWhiteSpace(username)) return null;
+        return await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+    }
+
+    /// <summary>
+    /// 產生隨機密碼
+    /// </summary>
+    private static string GenerateRandomPassword(int length)
+    {
+        const string chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
+        var random = new Random();
+        return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
     }
 
     /// <summary>

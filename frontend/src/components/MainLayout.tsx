@@ -13,9 +13,14 @@ import {
 } from '@ant-design/icons';
 import { User, Factory } from '../types';
 import DeliveryOverviewTable from './DeliveryOverviewTable';
+import ImportUsersPage from './ImportUsersPage';
 
 const { Header, Sider, Content } = Layout;
 const { Title, Text } = Typography;
+
+interface UserWithAdmin extends User {
+  isAdmin?: boolean;
+}
 
 interface MainLayoutProps {
   user: User;
@@ -25,6 +30,8 @@ interface MainLayoutProps {
 const MainLayout: React.FC<MainLayoutProps> = ({ user, onLogout }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [selectedKey, setSelectedKey] = useState('1');
+  const [showImportUsers, setShowImportUsers] = useState(false);
+  const userWithAdmin = user as UserWithAdmin;
 
   // 取得工廠名稱
   const getFactoryName = (factory: Factory) => {
@@ -77,10 +84,18 @@ const MainLayout: React.FC<MainLayoutProps> = ({ user, onLogout }) => {
       icon: <FileTextOutlined />,
       label: 'Reports',
     },
+    ...(userWithAdmin.isAdmin ? [{
+      key: 'import-users',
+      icon: <UserOutlined />,
+      label: '帳號匯入',
+    }] : [])
   ];
 
   // 渲染主要內容
   const renderContent = () => {
+    if (showImportUsers) {
+      return <ImportUsersPage onBack={() => setShowImportUsers(false)} />;
+    }
     switch (selectedKey) {
       case '1':
         return <DeliveryOverviewTable />;
@@ -123,6 +138,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({ user, onLogout }) => {
             <Text style={{ color: '#999' }}>此功能尚未實作，敬請期待</Text>
           </div>
         );
+      case 'import-users':
+        setShowImportUsers(true);
+        return null;
       default:
         return <DeliveryOverviewTable />;
     }
@@ -161,7 +179,10 @@ const MainLayout: React.FC<MainLayoutProps> = ({ user, onLogout }) => {
           mode="inline"
           selectedKeys={[selectedKey]}
           items={menuItems}
-          onClick={({ key }) => setSelectedKey(key)}
+          onClick={({ key }) => {
+            setSelectedKey(key);
+            if (key === 'import-users') setShowImportUsers(true);
+          }}
           style={{ borderRight: 0 }}
         />
       </Sider>

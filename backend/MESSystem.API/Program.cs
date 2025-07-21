@@ -121,3 +121,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run(); 
+
+// 部署到 Render 時，需在 Render 靜態站台設定 REACT_APP_API_URL，指向後端 API 服務網址

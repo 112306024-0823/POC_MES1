@@ -26,6 +26,11 @@ public class User
     public string PasswordHash { get; set; } = string.Empty;
 
     /// <summary>
+    /// 是否為管理者
+    /// </summary>
+    public bool IsAdmin { get; set; } = false;
+
+    /// <summary>
     /// 所屬工廠
     /// </summary>
     [Required]

@@ -1,4 +1,12 @@
 @echo off
+REM ====== 自動關閉 5000/3000 port ======
+for %%P in (5000 3000) do (
+    for /f "tokens=5" %%a in ('netstat -ano ^| findstr :%%P') do (
+        echo Killing PID %%a on port %%P
+        taskkill /F /PID %%a
+    )
+)
+REM ====== 原有內容 ======
 echo.
 echo ================================================
 echo          MES 系統 - 開發環境啟動

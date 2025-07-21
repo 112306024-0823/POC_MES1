@@ -5,7 +5,11 @@ import {
   DeliveryOverview, 
   CreateDeliveryRequest, 
   ApiResponse,
-  Factory 
+  Factory,
+  RegisterRequest,
+  RegisterResponse,
+  ImportUser,
+  ImportUsersResponse
 } from '../types';
 
 // 建立 axios 實例
@@ -54,6 +58,28 @@ export const authAPI = {
   // 取得當前使用者資訊
   async getCurrentUser(): Promise<ApiResponse<any>> {
     const response = await api.get<ApiResponse<any>>('/auth/me');
+    return response.data;
+  },
+
+  // 註冊
+  async register(registerData: RegisterRequest): Promise<ApiResponse<RegisterResponse>> {
+    const response = await api.post<ApiResponse<RegisterResponse>>('/auth/register', registerData);
+    return response.data;
+  },
+
+  // 帳號匯入
+  async importUsers(file: File): Promise<ApiResponse<ImportUsersResponse>> {
+    const formData = new FormData();
+    formData.append('file', file);
+    const response = await api.post<ApiResponse<ImportUsersResponse>>('/auth/import-users', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+    return response.data;
+  },
+
+  // 下載範本
+  async downloadImportTemplate(type: 'xlsx' | 'csv' = 'xlsx'): Promise<Blob> {
+    const response = await api.get(`/auth/import-template?type=${type}`, { responseType: 'blob' });
     return response.data;
   }
 };

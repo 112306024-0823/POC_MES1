@@ -41,6 +41,7 @@ public class MESContext : DbContext
             entity.Property(e => e.Username).IsRequired().HasMaxLength(50);
             entity.Property(e => e.PasswordHash).IsRequired();
             entity.Property(e => e.Factory).HasConversion<int>();
+            entity.Property(e => e.IsAdmin).HasDefaultValue(false);
             entity.HasIndex(e => new { e.Username, e.Factory }).IsUnique();
         });
 
@@ -74,21 +75,24 @@ public class MESContext : DbContext
                 Id = 1,
                 Username = "admin",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("123456"),
-                Factory = Factory.TPL
+                Factory = Factory.TPL,
+                IsAdmin = true
             },
             new User
             {
                 Id = 2,
                 Username = "user1",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("123456"),
-                Factory = Factory.NVN
+                Factory = Factory.NVN,
+                IsAdmin = false
             },
             new User
             {
                 Id = 3,
                 Username = "user2",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("123456"),
-                Factory = Factory.LR
+                Factory = Factory.LR,
+                IsAdmin = false
             }
         );
 
