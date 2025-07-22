@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { Card, Row, Col, Statistic, Table, Tag, Typography, message, Input, Space } from 'antd';
 import { UserOutlined, TeamOutlined, FileDoneOutlined, CheckCircleOutlined, CloseCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import { User, DeliveryOverview, ArriveStatus } from '../types';
-import { authAPI, deliveryAPI } from '../services/api';
+import { authAPI, deliveryAPI, dashboardAPI } from '../services/api';
 
 const { Title } = Typography;
 
@@ -13,28 +13,28 @@ const cardStyle = {
   minHeight: 120,
   display: 'flex',
   alignItems: 'center',
-  padding: '0 4vw', // 響應式 padding
+  padding: '0 2vw',
 };
 
 const iconCircle = (icon: React.ReactNode, color: string) => (
   <div style={{
-    width: 'clamp(36px,6vw,48px)',
-    height: 'clamp(36px,6vw,48px)',
+    width: 48,
+    height: 48,
     borderRadius: '50%',
     background: color,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 'clamp(8px,2vw,16px)',
+    marginRight: 18,
     marginLeft: 0,
     boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
   }}>{icon}</div>
 );
 
 const statBlock = (title: string, value: any, loading: boolean, color: string) => (
-  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', height: 'clamp(36px,6vw,48px)', marginLeft: 0 }}>
-    <span style={{ fontSize: 'clamp(13px,2.5vw,16px)', color: '#64748b', fontWeight: 500, lineHeight: 1 }}>{title}</span>
-    <span style={{ fontSize: 'clamp(20px,4vw,28px)', fontWeight: 700, color, lineHeight: 1.6 }}>{loading ? '--' : value}</span>
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', height: 48, marginLeft: 0 }}>
+    <span style={{ fontSize: 16, color: '#64748b', fontWeight: 500, lineHeight: 1 }}>{title}</span>
+    <span style={{ fontSize: 28, fontWeight: 700, color, lineHeight: 1.6 }}>{loading ? '--' : value}</span>
   </div>
 );
 //讓標題在ICON旁邊
@@ -57,7 +57,7 @@ const DashboardPage: React.FC = () => {
       setLoading(true);
       try {
         const [summaryRes, usersRes, deliveriesRes] = await Promise.all([
-          fetch('/api/dashboard/summary', { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }).then(r => r.json()),
+          dashboardAPI.getSummary(),
           authAPI.getUsers(),
           deliveryAPI.getDeliveries()
         ]);
@@ -103,42 +103,42 @@ const DashboardPage: React.FC = () => {
     <div style={{ padding: '4vw', background: '#f6f8fa', minHeight: '110vh' }}>
       <Title level={3} style={{ marginBottom: 32, fontWeight: 700, letterSpacing: 1, fontSize: 'clamp(20px,4vw,32px)' }}>Dashboard</Title>
       <Row gutter={[16, 16]}>
-        <Col xs={24} sm={12} md={8} lg={6} xl={5}>
+        <Col xs={24} sm={12} md={8} lg={6} xl={4} xxl={4}>
           <Card style={cardStyle} bordered={false}>
             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
-              {iconCircle(<UserOutlined style={{ fontSize: 'clamp(18px,3vw,28px)', color: '#6366f1' }} />, '#e0e7ff')}
+              {iconCircle(<UserOutlined style={{ fontSize: 28, color: '#6366f1' }} />, '#e0e7ff')}
               {statBlock('使用者總數', summary?.totalUsers, loading, '#1e293b')}
             </div>
           </Card>
         </Col>
-        <Col xs={24} sm={12} md={8} lg={6} xl={5}>
+        <Col xs={24} sm={12} md={8} lg={6} xl={4} xxl={4}>
           <Card style={cardStyle} bordered={false}>
             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
-              {iconCircle(<TeamOutlined style={{ fontSize: 'clamp(18px,3vw,28px)', color: '#10b981' }} />, '#d1fae5')}
+              {iconCircle(<TeamOutlined style={{ fontSize: 28, color: '#10b981' }} />, '#d1fae5')}
               {statBlock('管理員數', summary?.adminUsers, loading, '#1e293b')}
             </div>
           </Card>
         </Col>
-        <Col xs={24} sm={12} md={8} lg={6} xl={5}>
+        <Col xs={24} sm={12} md={8} lg={6} xl={4} xxl={4}>
           <Card style={cardStyle} bordered={false}>
             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
-              {iconCircle(<FileDoneOutlined style={{ fontSize: 'clamp(18px,3vw,28px)', color: '#f59e42' }} />, '#fef3c7')}
+              {iconCircle(<FileDoneOutlined style={{ fontSize: 28, color: '#f59e42' }} />, '#fef3c7')}
               {statBlock('進貨記錄總數', summary?.totalDeliveries, loading, '#1e293b')}
             </div>
           </Card>
         </Col>
-        <Col xs={24} sm={12} md={8} lg={6} xl={5}>
+        <Col xs={24} sm={12} md={8} lg={6} xl={4} xxl={4}>
           <Card style={cardStyle} bordered={false}>
             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
-              {iconCircle(<CheckCircleOutlined style={{ fontSize: 'clamp(18px,3vw,28px)', color: '#22d3ee' }} />, '#cffafe')}
+              {iconCircle(<CheckCircleOutlined style={{ fontSize: 28, color: '#22d3ee' }} />, '#cffafe')}
               {statBlock('如期到貨數', summary?.onTimeDeliveries, loading, '#1e293b')}
             </div>
           </Card>
         </Col>
-        <Col xs={24} sm={12} md={8} lg={6} xl={5}>
+        <Col xs={24} sm={12} md={8} lg={6} xl={4} xxl={4}>
           <Card style={cardStyle} bordered={false}>
             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
-              {iconCircle(<CloseCircleOutlined style={{ fontSize: 'clamp(18px,3vw,28px)', color: '#ef4444' }} />, '#fee2e2')}
+              {iconCircle(<CloseCircleOutlined style={{ fontSize: 28, color: '#ef4444' }} />, '#fee2e2')}
               {statBlock('延遲到貨數', summary?.delayedDeliveries, loading, '#1e293b')}
             </div>
           </Card>

@@ -128,4 +128,11 @@ export const deliveryAPI = {
   }
 };
 
+export const dashboardAPI = {
+  async getSummary(): Promise<ApiResponse<any>> {
+    const response = await api.get('/dashboard/summary');
+    return response.data;
+  }
+};
+
 export default api; 
