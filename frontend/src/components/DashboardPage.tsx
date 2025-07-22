@@ -10,31 +10,31 @@ const cardStyle = {
   borderRadius: 10,
   boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
   background: '#fff',
-  minHeight: 80,
+  minHeight: 120,
   display: 'flex',
   alignItems: 'center',
-  padding: '0 20px',
+  padding: '0 4vw', // 響應式 padding
 };
 
 const iconCircle = (icon: React.ReactNode, color: string) => (
   <div style={{
-    width: 48,
-    height: 48,
+    width: 'clamp(36px,6vw,48px)',
+    height: 'clamp(36px,6vw,48px)',
     borderRadius: '50%',
     background: color,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 16,
+    marginRight: 'clamp(8px,2vw,16px)',
     marginLeft: 0,
     boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
   }}>{icon}</div>
 );
 
 const statBlock = (title: string, value: any, loading: boolean, color: string) => (
-  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', height: 48, marginLeft: 0 }}>
-    <span style={{ fontSize: 16, color: '#64748b', fontWeight: 500, lineHeight: 1 }}>{title}</span>
-    <span style={{ fontSize: 28, fontWeight: 700, color, lineHeight: 1.6 }}>{loading ? '--' : value}</span>
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', height: 'clamp(36px,6vw,48px)', marginLeft: 0 }}>
+    <span style={{ fontSize: 'clamp(13px,2.5vw,16px)', color: '#64748b', fontWeight: 500, lineHeight: 1 }}>{title}</span>
+    <span style={{ fontSize: 'clamp(20px,4vw,28px)', fontWeight: 700, color, lineHeight: 1.6 }}>{loading ? '--' : value}</span>
   </div>
 );
 //讓標題在ICON旁邊
@@ -100,117 +100,122 @@ const DashboardPage: React.FC = () => {
   ];
 
   return (
-    <div style={{ padding: 32, background: '#f6f8fa', minHeight: '100vh' }}>
-      <Title level={3} style={{ marginBottom: 32, fontWeight: 700, letterSpacing: 1 }}>Dashboard</Title>
-      <Row gutter={32} style={{ marginBottom: 32 }}>
-        <Col span={5}>
+    <div style={{ padding: '4vw', background: '#f6f8fa', minHeight: '110vh' }}>
+      <Title level={3} style={{ marginBottom: 32, fontWeight: 700, letterSpacing: 1, fontSize: 'clamp(20px,4vw,32px)' }}>Dashboard</Title>
+      <Row gutter={[16, 16]}>
+        <Col xs={24} sm={12} md={8} lg={6} xl={5}>
           <Card style={cardStyle} bordered={false}>
             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
-              {iconCircle(<UserOutlined style={{ fontSize: 28, color: '#6366f1' }} />, '#e0e7ff')}
+              {iconCircle(<UserOutlined style={{ fontSize: 'clamp(18px,3vw,28px)', color: '#6366f1' }} />, '#e0e7ff')}
               {statBlock('使用者總數', summary?.totalUsers, loading, '#1e293b')}
             </div>
           </Card>
         </Col>
-        <Col span={5}>
+        <Col xs={24} sm={12} md={8} lg={6} xl={5}>
           <Card style={cardStyle} bordered={false}>
             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
-              {iconCircle(<TeamOutlined style={{ fontSize: 28, color: '#10b981' }} />, '#d1fae5')}
+              {iconCircle(<TeamOutlined style={{ fontSize: 'clamp(18px,3vw,28px)', color: '#10b981' }} />, '#d1fae5')}
               {statBlock('管理員數', summary?.adminUsers, loading, '#1e293b')}
             </div>
           </Card>
         </Col>
-        <Col span={5}>
+        <Col xs={24} sm={12} md={8} lg={6} xl={5}>
           <Card style={cardStyle} bordered={false}>
             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
-              {iconCircle(<FileDoneOutlined style={{ fontSize: 28, color: '#f59e42' }} />, '#fef3c7')}
+              {iconCircle(<FileDoneOutlined style={{ fontSize: 'clamp(18px,3vw,28px)', color: '#f59e42' }} />, '#fef3c7')}
               {statBlock('進貨記錄總數', summary?.totalDeliveries, loading, '#1e293b')}
             </div>
           </Card>
         </Col>
-        <Col span={5}>
+        <Col xs={24} sm={12} md={8} lg={6} xl={5}>
           <Card style={cardStyle} bordered={false}>
             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
-              {iconCircle(<CheckCircleOutlined style={{ fontSize: 28, color: '#22d3ee' }} />, '#cffafe')}
+              {iconCircle(<CheckCircleOutlined style={{ fontSize: 'clamp(18px,3vw,28px)', color: '#22d3ee' }} />, '#cffafe')}
               {statBlock('如期到貨數', summary?.onTimeDeliveries, loading, '#1e293b')}
             </div>
           </Card>
         </Col>
-        <Col span={4}>
+        <Col xs={24} sm={12} md={8} lg={6} xl={5}>
           <Card style={cardStyle} bordered={false}>
             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
-              {iconCircle(<CloseCircleOutlined style={{ fontSize: 28, color: '#ef4444' }} />, '#fee2e2')}
+              {iconCircle(<CloseCircleOutlined style={{ fontSize: 'clamp(18px,3vw,28px)', color: '#ef4444' }} />, '#fee2e2')}
               {statBlock('延遲到貨數', summary?.delayedDeliveries, loading, '#1e293b')}
             </div>
           </Card>
         </Col>
       </Row>
-      <Row gutter={32}>
-        <Col span={12}>
+      {/* 響應式表格區塊 */}
+      <Row gutter={[32, 32]} style={{ marginTop: 24 }}>
+        <Col xs={24} md={12}>
           <Card bordered={false} style={{ borderRadius: 16, boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              <span style={{ fontWeight: 600, fontSize: 18 }}>使用者清單</span>
+            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+              <span style={{ fontWeight: 600, fontSize: 'clamp(16px,3vw,18px)' }}>使用者清單</span>
               <Input
                 allowClear
                 prefix={<SearchOutlined />}
                 placeholder="搜尋帳號/廠別"
-                style={{ width: 220 }}
+                style={{ width: 'clamp(120px,40vw,220px)', marginTop: 8 }}
                 value={userSearch}
                 onChange={e => setUserSearch(e.target.value)}
               />
             </div>
-            <Table
-              columns={userColumns}
-              dataSource={filteredUsers}
-              rowKey="username"
-              pagination={{
-                current: userPage,
-                pageSize: userPageSize,
-                total: filteredUsers.length,
-                onChange: (p, ps) => { setUserPage(p); setUserPageSize(ps); },
-                showSizeChanger: true,
-                showTotal: (total, range) => `第 ${range[0]}-${range[1]} 筆，共 ${total} 筆`,
-                position: ['bottomCenter']
-              }}
-              loading={loading}
-              size="middle"
-              bordered
-              rowClassName={(_, idx) => idx % 2 === 0 ? 'table-row-light' : 'table-row-dark'}
-              style={{ minHeight: 320 }}
-            />
+            <div style={{ overflowX: 'auto' }}>
+              <Table
+                columns={userColumns}
+                dataSource={filteredUsers}
+                rowKey="username"
+                pagination={{
+                  current: userPage,
+                  pageSize: userPageSize,
+                  total: filteredUsers.length,
+                  onChange: (p, ps) => { setUserPage(p); setUserPageSize(ps); },
+                  showSizeChanger: true,
+                  showTotal: (total, range) => `第 ${range[0]}-${range[1]} 筆，共 ${total} 筆`,
+                  position: ['bottomCenter']
+                }}
+                loading={loading}
+                size="middle"
+                bordered
+                rowClassName={(_, idx) => idx % 2 === 0 ? 'table-row-light' : 'table-row-dark'}
+                style={{ minHeight: 320, minWidth: 400 }}
+              />
+            </div>
           </Card>
         </Col>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <Card bordered={false} style={{ borderRadius: 16, boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              <span style={{ fontWeight: 600, fontSize: 18 }}>進貨清單</span>
+            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+              <span style={{ fontWeight: 600, fontSize: 'clamp(16px,3vw,18px)' }}>進貨清單</span>
               <Input
                 allowClear
                 prefix={<SearchOutlined />}
                 placeholder="搜尋 BL NO/客戶"
-                style={{ width: 220 }}
+                style={{ width: 'clamp(120px,40vw,220px)', marginTop: 8 }}
                 value={deliverySearch}
                 onChange={e => setDeliverySearch(e.target.value)}
               />
             </div>
-            <Table
-              columns={deliveryColumns}
-              dataSource={filteredDeliveries}
-              rowKey="id"
-              pagination={{
-                current: deliveryPage,
-                pageSize: deliveryPageSize,
-                total: filteredDeliveries.length,
-                onChange: (p, ps) => { setDeliveryPage(p); setDeliveryPageSize(ps); },
-                showSizeChanger: true,
-                showTotal: (total, range) => `第 ${range[0]}-${range[1]} 筆，共 ${total} 筆`,
-                position: ['bottomCenter']
-              }}
-              loading={loading}
-              size="middle"
-              bordered
-              rowClassName={(_, idx) => idx % 2 === 0 ? 'table-row-light' : 'table-row-dark'}
-              style={{ minHeight: 320 }}
-            />
+            <div style={{ overflowX: 'auto' }}>
+              <Table
+                columns={deliveryColumns}
+                dataSource={filteredDeliveries}
+                rowKey="id"
+                pagination={{
+                  current: deliveryPage,
+                  pageSize: deliveryPageSize,
+                  total: filteredDeliveries.length,
+                  onChange: (p, ps) => { setDeliveryPage(p); setDeliveryPageSize(ps); },
+                  showSizeChanger: true,
+                  showTotal: (total, range) => `第 ${range[0]}-${range[1]} 筆，共 ${total} 筆`,
+                  position: ['bottomCenter']
+                }}
+                loading={loading}
+                size="middle"
+                bordered
+                rowClassName={(_, idx) => idx % 2 === 0 ? 'table-row-light' : 'table-row-dark'}
+                style={{ minHeight: 320, minWidth: 400 }}
+              />
+            </div>
           </Card>
         </Col>
       </Row>

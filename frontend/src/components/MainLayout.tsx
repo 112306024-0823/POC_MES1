@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout, Menu, Avatar, Dropdown, Space, Typography, message } from 'antd';
 import {
   TruckOutlined,
@@ -9,7 +9,8 @@ import {
   LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  HomeOutlined
+  HomeOutlined,
+  CloseOutlined
 } from '@ant-design/icons';
 import { User, Factory } from '../types';
 import DeliveryOverviewTable from './DeliveryOverviewTable';
@@ -33,6 +34,15 @@ const MainLayout: React.FC<MainLayoutProps> = ({ user, onLogout }) => {
   const [selectedKey, setSelectedKey] = useState('1');
   const [showImportUsers, setShowImportUsers] = useState(false);
   const userWithAdmin = user as UserWithAdmin;
+  const [isMobile, setIsMobile] = useState(false);
+
+  // 在 useEffect 監聽視窗寬度，判斷是否為手機
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // 取得工廠名稱
   const getFactoryName = (factory: Factory) => {
@@ -161,18 +171,26 @@ const MainLayout: React.FC<MainLayoutProps> = ({ user, onLogout }) => {
         trigger={null} 
         collapsible 
         collapsed={collapsed}
-        style={{
-          background: '#001529',
-        }}
+        breakpoint="md"
+        collapsedWidth={0}
+        onBreakpoint={broken => setCollapsed(broken)}
+        style={{ background: '#001529' }}
       >
+        {/* Sider 內部最上方，手機展開時顯示關閉icon */}
+        {isMobile && !collapsed && (
+          <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', height: 48, padding: '0 12px' }}>
+            <CloseOutlined style={{ color: '#fff', fontSize: 24, cursor: 'pointer' }} onClick={() => setCollapsed(true)} />
+          </div>
+        )}
         <div style={{ 
           height: '64px', 
           display: 'flex', 
           alignItems: 'center', 
-          justifyContent: 'center',
+          justifyContent: collapsed ? 'center' : 'flex-start',
           background: 'rgba(255, 255, 255, 0.1)',
           margin: '16px',
-          borderRadius: '6px'
+          borderRadius: '6px',
+          paddingLeft: collapsed ? 0 : 16
         }}>
           <HomeOutlined style={{ color: '#fff', fontSize: '24px' }} />
           {!collapsed && (
@@ -207,11 +225,12 @@ const MainLayout: React.FC<MainLayoutProps> = ({ user, onLogout }) => {
           boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
+            {/* 收合/展開按鈕 */}
             {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
-              style: { fontSize: '18px', cursor: 'pointer' },
+              style: { fontSize: '18px', cursor: 'pointer', marginRight: 16 },
               onClick: () => setCollapsed(!collapsed),
             })}
-            <Title level={4} style={{ margin: '0 0 0 16px', color: '#001529' }}>
+            <Title level={4} style={{ margin: '0 0 0 0', color: '#001529' }}>
               {menuItems.find(item => item.key === selectedKey)?.label}
             </Title>
           </div>
