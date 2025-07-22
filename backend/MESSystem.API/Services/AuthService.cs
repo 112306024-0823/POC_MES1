@@ -176,6 +176,14 @@ public class AuthService : IAuthService
     }
 
     /// <summary>
+    /// 回傳所有使用者
+    /// </summary>
+    public async Task<List<Models.User>> GetAllUsersAsync()
+    {
+        return await _context.Users.ToListAsync();
+    }
+
+    /// <summary>
     /// 產生隨機密碼
     /// </summary>
     private static string GenerateRandomPassword(int length)

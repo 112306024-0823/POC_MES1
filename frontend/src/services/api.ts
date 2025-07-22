@@ -9,7 +9,8 @@ import {
   RegisterRequest,
   RegisterResponse,
   ImportUser,
-  ImportUsersResponse
+  ImportUsersResponse,
+  User
 } from '../types';
 
 // 建立 axios 實例
@@ -80,6 +81,15 @@ export const authAPI = {
   // 下載範本
   async downloadImportTemplate(type: 'xlsx' | 'csv' = 'xlsx'): Promise<Blob> {
     const response = await api.get(`/auth/import-template?type=${type}`, { responseType: 'blob' });
+    return response.data;
+  },
+
+  // 取得所有使用者
+  async getUsers(): Promise<ApiResponse<User[]>> {
+    const token = localStorage.getItem('token');
+    const response = await axios.get<ApiResponse<User[]>>('/api/auth/users', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
     return response.data;
   }
 };

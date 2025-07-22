@@ -6,6 +6,7 @@ using NPOI.XSSF.UserModel;
 using CsvHelper;
 using System.Globalization;
 using MESSystem.API.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MESSystem.API.Controllers;
 
@@ -229,6 +230,27 @@ public class AuthController : ControllerBase
         {
             _logger.LogError(ex, "取得使用者資訊時發生錯誤");
             return StatusCode(500, ApiResponse<object>.CreateError("系統錯誤"));
+        }
+    }
+
+    /// <summary>
+    /// 取得所有使用者（僅帳號、廠別、是否管理員）
+    /// </summary>
+    [HttpGet("users")]
+    [Authorize]
+    public async Task<ActionResult<ApiResponse<IEnumerable<object>>>> GetUsers()
+    {
+        try
+        {
+            var users = await _authService.GetAllUsersAsync();
+            // 只回傳必要欄位
+            var result = users.Select(u => new { u.Username, u.Factory, u.IsAdmin });
+            return Ok(ApiResponse<IEnumerable<object>>.CreateSuccess(result, "取得使用者清單成功"));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "取得使用者清單時發生錯誤");
+            return StatusCode(500, ApiResponse<IEnumerable<object>>.CreateError("系統錯誤"));
         }
     }
 } 

@@ -17,7 +17,7 @@ obj/
 # 環境變數
 .env
 .env.*
-
+    
 # VSCode/IDE
 .vscode/
 .idea/

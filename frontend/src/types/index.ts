@@ -15,6 +15,7 @@ export enum ArriveStatus {
 export interface User {
   username: string;
   factory: Factory;
+  isAdmin?: boolean;
 }
 
 // 登入請求

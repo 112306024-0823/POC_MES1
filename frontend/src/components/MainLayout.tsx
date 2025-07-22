@@ -14,6 +14,7 @@ import {
 import { User, Factory } from '../types';
 import DeliveryOverviewTable from './DeliveryOverviewTable';
 import ImportUsersPage from './ImportUsersPage';
+import DashboardPage from './DashboardPage';
 
 const { Header, Sider, Content } = Layout;
 const { Title, Text } = Typography;
@@ -65,6 +66,11 @@ const MainLayout: React.FC<MainLayoutProps> = ({ user, onLogout }) => {
   // 側邊選單項目
   const menuItems = [
     {
+      key: 'dashboard',
+      icon: <HomeOutlined />,
+      label: 'Dashboard',
+    },
+    {
       key: '1',
       icon: <TruckOutlined />,
       label: 'Estimated Incoming Shipment',
@@ -87,7 +93,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ user, onLogout }) => {
     ...(userWithAdmin.isAdmin ? [{
       key: 'import-users',
       icon: <UserOutlined />,
-      label: '帳號匯入',
+      label: 'Account Setting',
     }] : [])
   ];
 
@@ -97,6 +103,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({ user, onLogout }) => {
       return <ImportUsersPage onBack={() => setShowImportUsers(false)} />;
     }
     switch (selectedKey) {
+      case 'dashboard':
+        return <DashboardPage />;
       case '1':
         return <DeliveryOverviewTable />;
       case '2':

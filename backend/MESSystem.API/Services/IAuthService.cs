@@ -42,4 +42,6 @@ public interface IAuthService
     /// <param name="username">帳號</param>
     /// <returns>使用者或 null</returns>
     Task<Models.User?> GetUserByUsernameAsync(string? username);
+
+    Task<List<Models.User>> GetAllUsersAsync();
 } 
