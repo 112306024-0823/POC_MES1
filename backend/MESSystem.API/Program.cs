@@ -79,7 +79,8 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins(
             "http://localhost:3000",                // 本地開發
-            "https://poc-mes1-2.onrender.com"       // Render 前端正式網址
+            "https://poc-mes1-2.onrender.com",      // Render 前端正式網址
+            "https://mes-system-frontend.onrender.com" // 新的 Render 前端網址
         )
         .AllowAnyHeader()
         .AllowAnyMethod()

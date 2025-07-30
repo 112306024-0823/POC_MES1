@@ -15,8 +15,8 @@ import {
 
 // 建立 axios 實例
 const api = axios.create({
-  // 部署到 Render 時，請在 Render 靜態站台設定 REACT_APP_API_URL，指向你的後端 API 服務網址
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000/api',
+  // 部署到 Render 時，請在 Render 靜態站台設定 REACT_APP_API_BASE_URL，指向你的後端 API 服務網址
+  baseURL: process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api',
   timeout: 10000,
 });
 
@@ -86,10 +86,7 @@ export const authAPI = {
 
   // 取得所有使用者
   async getUsers(): Promise<ApiResponse<User[]>> {
-    const token = localStorage.getItem('token');
-    const response = await axios.get<ApiResponse<User[]>>('/api/auth/users', {
-      headers: { Authorization: `Bearer ${token}` }
-    });
+    const response = await api.get<ApiResponse<User[]>>('/auth/users');
     return response.data;
   }
 };
@@ -131,6 +128,11 @@ export const deliveryAPI = {
 export const dashboardAPI = {
   async getSummary(): Promise<ApiResponse<any>> {
     const response = await api.get('/dashboard/summary');
+    return response.data;
+  },
+  
+  async test(): Promise<ApiResponse<any>> {
+    const response = await api.get('/dashboard/test');
     return response.data;
   }
 };

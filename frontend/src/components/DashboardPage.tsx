@@ -64,8 +64,9 @@ const DashboardPage: React.FC = () => {
         if (summaryRes.success) setSummary(summaryRes.data);
         if (usersRes.success && usersRes.data) setUsers(usersRes.data);
         if (deliveriesRes.success && deliveriesRes.data) setDeliveries(deliveriesRes.data);
-      } catch (e) {
-        message.error('載入 Dashboard 資料失敗');
+      } catch (e: any) {
+        console.error('Dashboard 載入錯誤:', e);
+        message.error(`載入 Dashboard 資料失敗: ${e.response?.data?.message || e.message}`);
       } finally {
         setLoading(false);
       }
