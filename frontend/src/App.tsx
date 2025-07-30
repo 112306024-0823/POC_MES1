@@ -19,6 +19,10 @@ const App: React.FC = () => {
     if (token && userData) {
       try {
         const parsedUser = JSON.parse(userData);
+        // 確保 isAdmin 欄位存在
+        if (parsedUser.isAdmin === undefined) {
+          parsedUser.isAdmin = false;
+        }
         setUser(parsedUser);
         setIsAuthenticated(true);
       } catch (error) {
@@ -30,8 +34,8 @@ const App: React.FC = () => {
   }, []);
 
   // 處理登入成功
-  const handleLoginSuccess = (token: string, username: string, factory: Factory) => {
-    const userData: User = { username, factory };
+  const handleLoginSuccess = (token: string, username: string, factory: Factory, isAdmin: boolean) => {
+    const userData: User = { username, factory, isAdmin };
     setUser(userData);
     setIsAuthenticated(true);
   };

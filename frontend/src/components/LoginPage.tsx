@@ -5,7 +5,7 @@ import { LoginRequest, RegisterRequest, FACTORY_OPTIONS } from '../types';
 import { authAPI } from '../services/api';
 
 interface LoginPageProps {
-  onLoginSuccess: (token: string, username: string, factory: number) => void;
+  onLoginSuccess: (token: string, username: string, factory: number, isAdmin: boolean) => void;
 }
 
 const RegisterPage: React.FC<{ onBackToLogin: () => void }> = ({ onBackToLogin }) => {
@@ -129,7 +129,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
         localStorage.setItem('user', JSON.stringify({ username, factory, isAdmin }));
         
         message.success('登入成功！');
-        onLoginSuccess(token, username, factory);
+        onLoginSuccess(token, username, factory, isAdmin);
       } else {
         message.error(response.message || '登入失敗');
       }

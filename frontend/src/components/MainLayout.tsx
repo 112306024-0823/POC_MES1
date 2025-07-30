@@ -20,10 +20,6 @@ import DashboardPage from './DashboardPage';
 const { Header, Sider, Content } = Layout;
 const { Title, Text } = Typography;
 
-interface UserWithAdmin extends User {
-  isAdmin?: boolean;
-}
-
 interface MainLayoutProps {
   user: User;
   onLogout: () => void;
@@ -33,7 +29,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({ user, onLogout }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [selectedKey, setSelectedKey] = useState('1');
   const [showImportUsers, setShowImportUsers] = useState(false);
-  const userWithAdmin = user as UserWithAdmin;
   const [isMobile, setIsMobile] = useState(false);
 
   // 在 useEffect 監聽視窗寬度，判斷是否為手機
@@ -100,7 +95,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ user, onLogout }) => {
       icon: <FileTextOutlined />,
       label: 'Reports',
     },
-    ...(userWithAdmin.isAdmin ? [{
+    ...(user.isAdmin ? [{
       key: 'import-users',
       icon: <UserOutlined />,
       label: 'Account Setting',
@@ -109,8 +104,11 @@ const MainLayout: React.FC<MainLayoutProps> = ({ user, onLogout }) => {
 
   // 渲染主要內容
   const renderContent = () => {
-    if (showImportUsers) {
-      return <ImportUsersPage onBack={() => setShowImportUsers(false)} />;
+    if (selectedKey === 'import-users') {
+      return <ImportUsersPage onBack={() => {
+        setShowImportUsers(false);
+        setSelectedKey('dashboard'); // 返回時切換到 dashboard
+      }} />;
     }
     switch (selectedKey) {
       case 'dashboard':
@@ -156,9 +154,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({ user, onLogout }) => {
             <Text style={{ color: '#999' }}>此功能尚未實作，敬請期待</Text>
           </div>
         );
-      case 'import-users':
-        setShowImportUsers(true);
-        return null;
       default:
         return <DeliveryOverviewTable />;
     }
@@ -207,7 +202,11 @@ const MainLayout: React.FC<MainLayoutProps> = ({ user, onLogout }) => {
           items={menuItems}
           onClick={({ key }) => {
             setSelectedKey(key);
-            if (key === 'import-users') setShowImportUsers(true);
+            if (key === 'import-users') {
+              setShowImportUsers(true);
+            } else {
+              setShowImportUsers(false);
+            }
           }}
           style={{ borderRight: 0 }}
         />
